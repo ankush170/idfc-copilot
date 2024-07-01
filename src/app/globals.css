@@ -12,15 +12,19 @@
 
 :root {
   --font-oracle: 'Marcellus', sans-serif;
-  --mobile-bg-color: #FADBD8;
+  --mobile-bg-color: #F1948A;
   --text-color: #4A4A4A;
   --bot-bg-color: #FAF3EA;
   --user-bg-color: #E5DCC5;
   --maroon-color: #C70039;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  @apply bg-[color:var(--mobile-bg-color)] text-[color:var(--text-color)] font-sans text-xl;
+  @apply bg-[color:var(--mobile-bg-color)] text-[color:var(--text-color)] font-sans text-xl font-bold;
   font-family: var(--font-oracle);
 }
 
@@ -29,7 +33,7 @@ main {
 }
 
 .chat-window {
-  @apply w-full h-screen max-w-[44rem] p-8 space-y-4 bg-transparent;
+  @apply w-full h-screen max-w-[50rem] p-8 space-y-4 bg-transparent;
   font-family: var(--font-oracle);
 }
 
@@ -56,3 +60,18 @@ main {
 .user-input button {
   @apply px-4 py-2 text-white bg-[color:var(--maroon-color)] rounded-full;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.top-blur {
+  background: #FADBD8;
+  box-shadow: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import ChatWindow from '../components/Chat/ChatWindow';
 
 interface Message {
@@ -11,15 +11,15 @@ interface Message {
 }
 
 export default function Home() {
-  const [messages, setMessages] = useState<Message[]>([]);
-
   const handleAddMessage = useCallback((message: Message) => {
-    setMessages((prevMessages) => [...prevMessages, message]);
+    // This function is now only used to handle new messages if needed
+    console.log('New message:', message);
+    // You can add any global state updates or side effects here
   }, []);
 
   return (
     <main className="flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
-      <ChatWindow messages={messages} onAddMessage={handleAddMessage} />
+      <ChatWindow onAddMessage={handleAddMessage} />
     </main>
   );
 }
