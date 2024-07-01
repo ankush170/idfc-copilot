@@ -1,33 +1,58 @@
+/* app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+@font-face {
+  font-family: 'Marcellus';
+  src: url('/fonts/Marcellus-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+:root {
+  --font-oracle: 'Marcellus', sans-serif;
+  --mobile-bg-color: #FADBD8;
+  --text-color: #4A4A4A;
+  --bot-bg-color: #FAF3EA;
+  --user-bg-color: #E5DCC5;
+  --maroon-color: #C70039;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  @apply bg-[color:var(--mobile-bg-color)] text-[color:var(--text-color)] font-sans text-xl;
+  font-family: var(--font-oracle);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+main {
+  @apply flex justify-center items-center h-screen;
+}
+
+.chat-window {
+  @apply w-full h-screen max-w-[44rem] p-8 space-y-4 bg-transparent;
+  font-family: var(--font-oracle);
+}
+
+.message {
+  @apply p-4 rounded-lg;
+}
+
+.user-message {
+  @apply bg-[#A93226] rounded-md text-white text-right;
+}
+
+.bot-message {
+  @apply bg-transparent border-none text-left;
+}
+
+.user-input {
+  @apply flex items-center mt-4 border-t border-gray-300 pt-4;
+}
+
+.user-input input {
+  @apply flex-1 p-4 border-none focus:outline-none;
+}
+
+.user-input button {
+  @apply px-4 py-2 text-white bg-[color:var(--maroon-color)] rounded-full;
 }
