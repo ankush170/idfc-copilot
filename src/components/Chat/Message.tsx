@@ -18,6 +18,7 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
   const [displayedContent, setDisplayedContent] = useState('');
   const [isTyping, setIsTyping] = useState(!isUser);
   const typingRef = useRef<NodeJS.Timeout | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isUser && message.type === 'text') {
@@ -46,18 +47,27 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
     }
   }, [isUser, message.content, message.type]);
 
+  const handleRadioChange = (value: string) => {
+    setSelectedValue(value);
+    onButtonClick?.(value);
+  };
+
   const renderContent = () => {
     if (message.type === 'button') {
       return (
-        <div className="flex space-x-2">
+        <div className="flex flex-col space-y-2">
           {message.buttons?.map((button, index) => (
-            <button
-              key={index}
-              className="px-2 py-1 text-sm bg-[#A93226] text-white rounded-full"
-              onClick={() => onButtonClick?.(button.value)}
-            >
-              {button.label}
-            </button>
+            <label key={index} className="flex items-center space-x-2">
+              <input
+                type="radio"
+                name="options"
+                value={button.value}
+                checked={selectedValue === button.value}
+                onChange={() => handleRadioChange(button.value)}
+                className="form-radio h-4 w-4 text-[#F1948A]"
+              />
+              <span className="text-sm">{button.label}</span>
+            </label>
           ))}
         </div>
       );

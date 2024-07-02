@@ -42,7 +42,7 @@ main {
 }
 
 .user-message {
-  @apply bg-[#A93226] rounded-md text-white text-right;
+  @apply bg-[#F1948A] p-2 rounded-[0.5rem] text-white text-right;
 }
 
 .bot-message {

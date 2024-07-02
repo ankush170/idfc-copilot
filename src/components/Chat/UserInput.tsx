@@ -33,7 +33,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSendMessage }) => {
         />
         <button
           onClick={handleSend}
-          className="absolute right-4 p-2 text-white bg-[#A93226] rounded-full"
+          className="absolute right-4 p-2 text-white bg-[#F1948A] rounded-full"
         >
           <ArrowUpIcon className="w-5 h-5 transform" />
         </button>

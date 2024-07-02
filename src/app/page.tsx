@@ -1,3 +1,5 @@
+// src/pages/index.tsx
+
 'use client';
 
 import { useCallback } from 'react';
@@ -19,7 +21,12 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
+    <main className="relative flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
+      <img 
+        src="/idfc-logo.png" 
+        alt="IDFC Logo" 
+        className="absolute top-4 left-4 w-[10rem] h-auto z-20" 
+      />
       <ChatWindow onAddMessage={handleAddMessage} />
     </main>
   );

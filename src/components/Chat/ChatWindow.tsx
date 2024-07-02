@@ -170,9 +170,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
 
   return (
     <div className="chat-window relative h-screen flex flex-col">
-      <div className="absolute inset-0 flex justify-center items-center opacity-[10%] pointer-events-none">
+      {/* <div className="absolute inset-0 flex justify-center items-center opacity-[10%] pointer-events-none">
         <img src="/idfc-logo.png" alt="IDFC Logo" className="w-2/5" />
-      </div>
+      </div> */}
       <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#FADBD8] to-transparent pointer-events-none z-10" />
       <div 
         className="flex-grow overflow-y-auto scrollbar-hide p-4 pt-16"
