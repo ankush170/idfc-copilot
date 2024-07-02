@@ -17,7 +17,7 @@ const UserInput: React.FC<UserInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 bg-[color:var(--mobile-bg-color)]">
+    <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[color:var(--mobile-bg-color)] to-transparent">
       <div className="relative flex items-center w-full max-w-2xl mx-auto">
         <input
           type="text"

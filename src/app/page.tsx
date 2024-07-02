@@ -6,8 +6,9 @@ import ChatWindow from '../components/Chat/ChatWindow';
 interface Message {
   sender: 'user' | 'bot';
   content: string;
-  type?: 'text' | 'image' | 'button';
+  type?: 'text' | 'image' | 'button' | 'chart';
   buttons?: { label: string; value: string }[];
+  chartComponent?: React.ReactNode;
 }
 
 export default function Home() {

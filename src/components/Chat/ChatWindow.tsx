@@ -2,12 +2,15 @@
 import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import UserInput from './UserInput';
+import ExpensesLineChart from '../charts/ExpensesLineChart';
+import InvestmentBarChart from '../charts/InvestmentBarChart';
 
 interface Message {
   sender: 'user' | 'bot';
   content: string;
-  type?: 'text' | 'image' | 'button';
+  type?: 'text' | 'image' | 'button' | 'chart';
   buttons?: { label: string; value: string }[];
+  chartComponent?: React.ReactNode;
 }
 
 interface ChatWindowProps {
@@ -21,6 +24,28 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
   const [consentGiven, setConsentGiven] = useState<boolean | null>(null);
   const [riskAppetiteSelected, setRiskAppetiteSelected] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
+
+  const expensesData = [
+    { month: 'Jan', expenses: 4000 },
+    { month: 'Feb', expenses: 3000 },
+    { month: 'Mar', expenses: 2000 },
+    { month: 'Apr', expenses: 2780 },
+    { month: 'May', expenses: 1890 },
+    { month: 'Jun', expenses: 2390 },
+    { month: 'Jul', expenses: 3490 },
+    { month: 'Aug', expenses: 3490 },
+    { month: 'Sep', expenses: 3490 },
+    { month: 'Oct', expenses: 3490 },
+    { month: 'Nov', expenses: 3490 },
+    { month: 'Dec', expenses: 3490 },
+  ];
+
+  const investmentData = [
+    { quarter: 'Q1', FD: 4000, DirectEquity: 2400, MutualFunds: 2400, Insurance: 1000 },
+    { quarter: 'Q2', FD: 3000, DirectEquity: 1398, MutualFunds: 2210, Insurance: 1200 },
+    { quarter: 'Q3', FD: 2000, DirectEquity: 9800, MutualFunds: 2290, Insurance: 1400 },
+    { quarter: 'Q4', FD: 2780, DirectEquity: 3908, MutualFunds: 2000, Insurance: 1600 },
+  ];
 
   useEffect(() => {
     const initialMessages: Message[] = [
@@ -53,7 +78,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
 
   useEffect(() => {
     if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+      chatWindowRef.current.scrollTop = 1.5*chatWindowRef.current.scrollHeight;
     }
   }, [displayedMessages]);
 
@@ -104,9 +129,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
       setConsentGiven(true);
       const continuedMessages: Message[] = [
         { sender: 'bot', content: '*Visual Insights:*', type: 'text' },
-        { sender: 'bot', content: 'Expenses Trend: [Line Chart 1]', type: 'text' },
-        { sender: 'bot', content: 'Investments Trend: [Bar Chart 1]', type: 'text' },
-        { sender: 'bot', content: 'May I know the monetary goals you are trying to achieve?', type: 'text' },
+        { sender: 'bot', content: 'Expenses Trend:', type: 'chart', chartComponent: <ExpensesLineChart data={expensesData} /> },
+        { sender: 'bot', content: 'Investments Trend:', type: 'chart', chartComponent: <InvestmentBarChart data={investmentData} /> },
         {
           sender: 'bot',
           content: 'Let us now explore your risk appetite. Your current investments show that:\n\nYou have 42% invested in FD and only 10% in direct equity. Remaining 38% is in large cap mutual funds. Hence, you have a moderate risk appetite',
@@ -146,10 +170,10 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
 
   return (
     <div className="chat-window relative h-screen flex flex-col">
-      <div className="absolute inset-0 flex justify-center items-center opacity-[7%] pointer-events-none">
+      <div className="absolute inset-0 flex justify-center items-center opacity-[10%] pointer-events-none">
         <img src="/idfc-logo.png" alt="IDFC Logo" className="w-2/5" />
       </div>
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#F1948A] to-transparent pointer-events-none z-10" />
+      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#FADBD8] to-transparent pointer-events-none z-10" />
       <div 
         className="flex-grow overflow-y-auto scrollbar-hide p-4 pt-16"
         ref={chatWindowRef}
