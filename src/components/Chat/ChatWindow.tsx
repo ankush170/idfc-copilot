@@ -49,7 +49,7 @@ const ChatWindow: React.FC = () => {
 
   useEffect(() => {
     setMessageQueue([
-      { sender: 'bot', content: 'Welcome to IDFC Health Advisor, may I know your name?', type: 'text' },
+      { sender: 'bot', content: 'Welcome to IDFC GenAI Robo Advisor, may I know your name?', type: 'text' },
     ]);
   }, []);
 
