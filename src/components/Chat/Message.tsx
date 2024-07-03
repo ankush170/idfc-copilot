@@ -6,7 +6,7 @@ interface MessageProps {
   message: {
     sender: 'user' | 'bot';
     content: string;
-    type?: 'text' | 'image' | 'button' | 'chart';
+    type?: 'text' | 'button' | 'chart';
     buttons?: { label: string; value: string }[];
     chartComponent?: React.ReactNode;
   };

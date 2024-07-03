@@ -1,28 +1,28 @@
-// src/components/Chat/ChatWindow.tsx
+// app/components/Chat/ChatWindow.tsx
+'use client'
+
 import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import UserInput from './UserInput';
+import { chatApi } from '../../utils/api';
 import ExpensesLineChart from '../charts/ExpensesLineChart';
 import InvestmentBarChart from '../charts/InvestmentBarChart';
 
 interface Message {
   sender: 'user' | 'bot';
   content: string;
-  type?: 'text' | 'image' | 'button' | 'chart';
+  type?: 'text' | 'button' | 'chart';
   buttons?: { label: string; value: string }[];
   chartComponent?: React.ReactNode;
 }
 
-interface ChatWindowProps {
-  onAddMessage: (message: Message) => void;
-}
-
-const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
+const ChatWindow: React.FC = () => {
   const [displayedMessages, setDisplayedMessages] = useState<Message[]>([]);
   const [messageQueue, setMessageQueue] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [consentGiven, setConsentGiven] = useState<boolean | null>(null);
-  const [riskAppetiteSelected, setRiskAppetiteSelected] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [isConsentGiven, setIsConsentGiven] = useState<boolean | null>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
   const expensesData = [
@@ -48,12 +48,9 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
   ];
 
   useEffect(() => {
-    const initialMessages: Message[] = [
-      { sender: 'bot', content: 'Welcome to IDFC Wealth Advisor, Ankush!', type: 'text' },
-      { sender: 'bot', content: 'How are you doing today?', type: 'text' },
-    ];
-
-    setMessageQueue(initialMessages);
+    setMessageQueue([
+      { sender: 'bot', content: 'Welcome to IDFC Health Advisor, may I know your name?', type: 'text' },
+    ]);
   }, []);
 
   useEffect(() => {
@@ -63,7 +60,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
         const nextMessage = messageQueue[0];
         setDisplayedMessages(prev => [...prev, nextMessage]);
         
-        // Wait for the message to finish typing
         if (nextMessage.sender === 'bot' && nextMessage.type === 'text') {
           await new Promise(resolve => setTimeout(resolve, nextMessage.content.length * 50 + 500));
         }
@@ -78,102 +74,106 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ onAddMessage }) => {
 
   useEffect(() => {
     if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = 1.5*chatWindowRef.current.scrollHeight;
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
     }
   }, [displayedMessages]);
 
-  const handleUserInput = (input: string) => {
+  const handleUserInput = async (input: string) => {
     const userMessage: Message = { sender: 'user', content: input, type: 'text' };
     setDisplayedMessages(prev => [...prev, userMessage]);
 
-    const subsequentMessages: Message[] = [
-      {
-        sender: 'bot',
-        content: "Let's get started by pulling in your financial data to customize your advice:\n- • AA Data\n- • Bank Transactions\n- • Pension Data/EPFO\n- • Investments/Cam",
-        type: 'text'
-      },
-      {
-        sender: 'bot',
-        content: 'Please confirm your consent to proceed:',
-        type: 'text',
-      },
-      {
-        sender: 'bot',
-        content: '',
-        type: 'button',
-        buttons: [
-          { label: 'I provide my consent', value: 'consent' },
-          { label: 'I do not provide my consent', value: 'no-consent' }
-        ]
-      }
-    ];
-
-    setMessageQueue(prev => [...prev, ...subsequentMessages]);
-  };
-
-  const handleButtonClick = (value: string) => {
-    const buttonLabels: { [key: string]: string } = {
-      'consent': 'I provide my consent',
-      'no-consent': 'I do not provide my consent',
-      'aggressive': 'Aggressive',
-      'moderately-aggressive': 'Moderately aggressive',
-      'moderate': 'Moderate',
-      'conservative': 'Conservative'
-    };
-
-    if (buttonLabels[value]) {
-      setDisplayedMessages(prev => [...prev, { sender: 'user', content: buttonLabels[value], type: 'text' }]);
-    }
-
-    if (value === 'consent') {
-      setConsentGiven(true);
-      const continuedMessages: Message[] = [
+    if (input.toLowerCase().includes('visual insights')) {
+      const chartMessages: Message[] = [
         { sender: 'bot', content: '*Visual Insights:*', type: 'text' },
-        { sender: 'bot', content: 'Expenses Trend:', type: 'chart', chartComponent: <ExpensesLineChart data={expensesData} /> },
-        { sender: 'bot', content: 'Investments Trend:', type: 'chart', chartComponent: <InvestmentBarChart data={investmentData} /> },
+        { 
+          sender: 'bot', 
+          content: 'Expenses Over Time', 
+          type: 'chart',
+          chartComponent: <ExpensesLineChart data={expensesData} />
+        },
+        { 
+          sender: 'bot', 
+          content: 'Investment Distribution', 
+          type: 'chart',
+          chartComponent: <InvestmentBarChart data={investmentData} />
+        },
+      ];
+      setMessageQueue(prev => [...prev, ...chartMessages]);
+    }else if (!userName) {
+      setUserName(input.toLowerCase());
+      const subsequentMessages: Message[] = [
         {
           sender: 'bot',
-          content: 'Let us now explore your risk appetite. Your current investments show that:\n\nYou have 42% invested in FD and only 10% in direct equity. Remaining 38% is in large cap mutual funds. Hence, you have a moderate risk appetite',
+          content: `Hi ${input}, I hope you are having a nice day!`,
           type: 'text'
         },
         {
           sender: 'bot',
-          content: 'However, we understand you may not want to always follow your historical asset allocation and risk appetite, thus please tell us more about your current risk interests:',
+          content: "Let's get started by pulling in your financial data to customize your advice:\n- • AA Data\n- • Bank Transactions\n- • Pension Data/EPFO\n- • Investments/Cam",
           type: 'text'
+        },
+        {
+          sender: 'bot',
+          content: 'Please confirm your consent to proceed:',
+          type: 'text',
         },
         {
           sender: 'bot',
           content: '',
           type: 'button',
           buttons: [
-            { label: 'Aggressive', value: 'aggressive' },
-            { label: 'Moderately aggressive', value: 'moderately-aggressive' },
-            { label: 'Moderate', value: 'moderate' },
-            { label: 'Conservative', value: 'conservative' }
+            { label: 'I provide my consent', value: 'consent' },
+            { label: 'I do not provide my consent', value: 'no-consent' }
           ]
         }
       ];
-      setMessageQueue(prev => [...prev, ...continuedMessages]);
-    } else if (value === 'no-consent') {
-      setConsentGiven(false);
-      setMessageQueue(prev => [...prev, { sender: 'bot', content: 'What else can I help you with?', type: 'text' }]);
+      setMessageQueue(prev => [...prev, ...subsequentMessages]);
+    } else if (sessionId) {
+      try {
+        const response = await chatApi({
+          customer_name: userName,
+          session_id: sessionId,
+          user_answer: input,
+          // is_user_consent: isConsentGiven || false,
+        });
+        setMessageQueue(prev => [...prev, { sender: 'bot', content: response.question, type: 'text' }]);
+      } catch (error) {
+        console.error('Error in API call:', error);
+        setMessageQueue(prev => [...prev, { sender: 'bot', content: 'Sorry, there was an error processing your request.', type: 'text' }]);
+      }
+    }
+  };
+
+  const handleButtonClick = async (value: string) => {
+    const isConsent = value === 'consent';
+    setIsConsentGiven(isConsent);
+    setDisplayedMessages(prev => [...prev, { sender: 'user', content: isConsent ? 'I provide my consent' : 'I do not provide my consent', type: 'text' }]);
+
+    if (isConsent) {
+      try {
+        const response = await chatApi({
+          customer_name: userName!,
+          user_answer: "Hello",
+          is_user_consent: true,
+        });
+        setSessionId(response.session_id);
+        setMessageQueue(prev => [
+          ...prev,
+          { sender: 'bot', content: response.question, type: 'text' },
+          // { sender: 'bot', content: 'May I know the monetary goals you are trying to achieve?', type: 'text' },
+        ]);
+      } catch (error) {
+        console.error('Error in consent API call:', error);
+        setMessageQueue(prev => [...prev, { sender: 'bot', content: 'Sorry, there was an error processing your request.', type: 'text' }]);
+      }
     } else {
-      // Handle risk appetite buttons
-      setRiskAppetiteSelected(true);
-      setMessageQueue(prev => [
-        ...prev,
-        { sender: 'bot', content: `You have chosen a ${buttonLabels[value]} risk appetite.`, type: 'text' },
-        { sender: 'bot', content: 'Now that we have seen your current investment status, and your monetary goals, let us begin the journey of achieving those.', type: 'text' }
-      ]);
+      setMessageQueue(prev => [...prev, { sender: 'bot', content: 'May I help you with anything else?', type: 'text' }]);
     }
   };
 
   return (
     <div className="chat-window relative h-screen flex flex-col">
-      {/* <div className="absolute inset-0 flex justify-center items-center opacity-[10%] pointer-events-none">
-        <img src="/idfc-logo.png" alt="IDFC Logo" className="w-2/5" />
-      </div> */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#FADBD8] to-transparent pointer-events-none z-10" />
+      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#FADBD8] to-transparent pointer-events-none z-10" />
       <div 
         className="flex-grow overflow-y-auto scrollbar-hide p-4 pt-16"
         ref={chatWindowRef}
