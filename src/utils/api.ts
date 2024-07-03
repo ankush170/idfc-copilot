@@ -12,7 +12,7 @@ interface ChatResponse {
     user_answer: string;
     is_user_consent?: boolean;
   }): Promise<ChatResponse> {
-    const response = await fetch('http://4.188.72.118:8005/chat', {
+    const response = await fetch('https://idfc.onfinance.ai/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
