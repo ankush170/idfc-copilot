@@ -30,7 +30,7 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
         if (index < message.content.length) {
           setDisplayedContent(message.content.slice(0, index + 1));
           index++;
-          typingRef.current = setTimeout(typeNextChar, 50);
+          typingRef.current = setTimeout(typeNextChar, 35);
         } else {
           setIsTyping(false);
         }
@@ -66,7 +66,7 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
                 onChange={() => handleRadioChange(button.value)}
                 className="form-radio h-4 w-4 text-[#F1948A]"
               />
-              <span className="text-sm">{button.label}</span>
+              <span className="text-md">{button.label}</span>
             </label>
           ))}
         </div>
