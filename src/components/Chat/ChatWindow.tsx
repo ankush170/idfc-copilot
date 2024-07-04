@@ -206,7 +206,7 @@ const ChatWindow: React.FC = () => {
     
         const response = await chatApi({
           customer_name: userName!,
-          user_answer: `Hello ${value}`,
+          user_answer: `Hello, my name is ${userName}, and this is my risk appetite: ${value}`,
           is_user_consent: true,
         });
         setSessionId(response.session_id);
