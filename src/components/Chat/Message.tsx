@@ -81,20 +81,20 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
             </div>
           </div>
         );
-      case 'text':
-      default:
-        console.log("Displayed content: ", displayedContent)
-        return (
-          <div className="relative inline-block">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {displayedContent.replace(/\n/g, '  \n')}
-            </ReactMarkdown>
-            {isTyping && (
-              <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
-            )}
-          </div>
-        );
-    }
+        case 'text':
+          default:
+            return (
+              <div className="relative inline-block">
+                <ReactMarkdown
+                  children={displayedContent}
+                  remarkPlugins={[remarkGfm]}
+                />
+                {isTyping && (
+                  <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
+                )}
+              </div>
+            );
+        }
   };
 
   return (
