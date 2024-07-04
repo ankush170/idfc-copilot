@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm'; // Import remark-gfm for GitHub-flavored markdown
+import remarkGfm from 'remark-gfm'; 
 import { useState, useEffect, useRef } from 'react';
 
 interface MessageProps {
