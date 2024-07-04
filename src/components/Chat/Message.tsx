@@ -1,4 +1,3 @@
-// src/components/Chat/Message.tsx
 import ReactMarkdown from 'react-markdown';
 import { useState, useEffect, useRef } from 'react';
 
@@ -53,46 +52,44 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
   };
 
   const renderContent = () => {
-    if (message.type === 'button') {
-      return (
-        <div className="flex flex-col space-y-2">
-          {message.buttons?.map((button, index) => (
-            <label key={index} className="flex items-center space-x-2">
-              <input
-                type="radio"
-                name="options"
-                value={button.value}
-                checked={selectedValue === button.value}
-                onChange={() => handleRadioChange(button.value)}
-                className="form-radio h-4 w-4 text-[#F1948A]"
-              />
-              <span className="text-md">{button.label}</span>
-            </label>
-          ))}
-        </div>
-      );
-    }
-
-    if (message.type === 'chart') {
-      return (
-        <div className="w-full my-4 overflow-x-auto">
-          <div className="text-sm font-bold mb-2">{message.content}</div>
-          <div className="min-w-[600px]">
-            {message.chartComponent}
+    switch (message.type) {
+      case 'button':
+        return (
+          <div className="flex flex-col space-y-2">
+            {message.buttons?.map((button, index) => (
+              <label key={index} className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="options"
+                  value={button.value}
+                  checked={selectedValue === button.value}
+                  onChange={() => handleRadioChange(button.value)}
+                  className="form-radio h-4 w-4 text-[#F1948A]"
+                />
+                <span className="text-md">{button.label}</span>
+              </label>
+            ))}
           </div>
-        </div>
-      );
-    }
-
-    if (message.type === 'text') {
-      return (
-        <div className="relative inline-block">
-          <ReactMarkdown>{displayedContent}</ReactMarkdown>
-          {isTyping && (
-            <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
-          )}
-        </div>
-      );
+        );
+      case 'chart':
+        return (
+          <div className="w-full my-4 overflow-x-auto">
+            <div className="text-sm font-bold mb-2">{message.content}</div>
+            <div className="min-w-[600px]">
+              {message.chartComponent}
+            </div>
+          </div>
+        );
+      case 'text':
+      default:
+        return (
+          <div className="relative inline-block">
+            <ReactMarkdown>{displayedContent.replace(/\n/g, '  \n')}</ReactMarkdown>
+            {isTyping && (
+              <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
+            )}
+          </div>
+        );
     }
   };
 

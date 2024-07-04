@@ -1,12 +1,12 @@
-// app/components/Chat/ChatWindow.tsx
-'use client'
-
 import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import UserInput from './UserInput';
 import { chatApi } from '../../utils/api';
-import ExpensesLineChart from '../charts/ExpensesLineChart';
-import InvestmentBarChart from '../charts/InvestmentBarChart';
+import ExpensesLineChart from '../Charts/ExpensesLineChart';
+import InvestmentBarChart from '../Charts/InvestmentBarChart';
+import AssetAllocationPieChart from '../Charts/AssetAllocationPieChart';
+import PieChartWithPaddingAngle from '../Charts/PieChartWithPaddingAngle';
+import LineBarAreaComposedChart from '../Charts/LineBarAreaComposedChart';
 
 interface Message {
   sender: 'user' | 'bot';
@@ -23,21 +23,22 @@ const ChatWindow: React.FC = () => {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userName, setUserName] = useState<string | null>(null);
   const [isConsentGiven, setIsConsentGiven] = useState<boolean | null>(null);
+  const [riskAppetite, setRiskAppetite] = useState<string | null>(null);
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
   const expensesData = [
-    { month: 'Jan', expenses: 4000 },
-    { month: 'Feb', expenses: 3000 },
-    { month: 'Mar', expenses: 2000 },
-    { month: 'Apr', expenses: 2780 },
-    { month: 'May', expenses: 1890 },
-    { month: 'Jun', expenses: 2390 },
-    { month: 'Jul', expenses: 3490 },
-    { month: 'Aug', expenses: 3490 },
-    { month: 'Sep', expenses: 3490 },
-    { month: 'Oct', expenses: 3490 },
-    { month: 'Nov', expenses: 3490 },
-    { month: 'Dec', expenses: 3490 },
+    { month: 'Jan', expenses: 4000, income: 5000 },
+    { month: 'Feb', expenses: 3000, income: 5200 },
+    { month: 'Mar', expenses: 2000, income: 4800 },
+    { month: 'Apr', expenses: 2780, income: 5100 },
+    { month: 'May', expenses: 1890, income: 5300 },
+    { month: 'Jun', expenses: 2390, income: 5400 },
+    { month: 'Jul', expenses: 3490, income: 5600 },
+    { month: 'Aug', expenses: 2900, income: 5200 },
+    { month: 'Sep', expenses: 3300, income: 5700 },
+    { month: 'Oct', expenses: 3100, income: 5500 },
+    { month: 'Nov', expenses: 3400, income: 5800 },
+    { month: 'Dec', expenses: 3700, income: 6000 },
   ];
 
   const investmentData = [
@@ -47,10 +48,49 @@ const ChatWindow: React.FC = () => {
     { quarter: 'Q4', FD: 2780, DirectEquity: 3908, MutualFunds: 2000, Insurance: 1600 },
   ];
 
+  const assetAllocationData = [
+    { name: 'Stocks', value: 400 },
+    { name: 'Bonds', value: 300 },
+    { name: 'Real Estate', value: 300 },
+    { name: 'Cash', value: 200 },
+    { name: 'Commodities', value: 100 },
+  ];
+
+  const pieChartWithPaddingAngleData = [
+    { name: 'Stocks', value: 400 },
+    { name: 'Bonds', value: 300 },
+    { name: 'Real Estate', value: 300 },
+    { name: 'Gold', value: 200 },
+  ];
+
+  const lineBarAreaComposedChartData = [
+    { name: 'Jan', income: 4000, expenses: 2400, savings: 2400 },
+    { name: 'Feb', income: 3000, expenses: 1398, savings: 2210 },
+    { name: 'Mar', income: 2000, expenses: 9800, savings: 2290 },
+    { name: 'Apr', income: 2780, expenses: 3908, savings: 2000 },
+    { name: 'May', income: 1890, expenses: 4800, savings: 2181 },
+    { name: 'Jun', income: 2390, expenses: 3800, savings: 2500 },
+    { name: 'Jul', income: 3490, expenses: 4300, savings: 2100 },
+  ];
+
   useEffect(() => {
-    setMessageQueue([
-      { sender: 'bot', content: 'Welcome to IDFC GenAI Robo Advisor, may I know your name?', type: 'text' },
-    ]);
+    const storedName = localStorage.getItem('userName');
+    if (storedName) {
+      setUserName(storedName);
+      setMessageQueue([
+        { sender: 'bot', content: `Welcome to IDFC GenAI Robo Advisor, ${storedName}. I hope you are having a great day!`, type: 'text' },
+        { sender: 'bot', content: 'Please confirm your consent to access your financial data in order to proceed:', type: 'text' },
+        {
+          sender: 'bot',
+          content: '',
+          type: 'button',
+          buttons: [
+            { label: 'I provide my consent', value: 'consent' },
+            { label: 'I do not provide my consent', value: 'no-consent' }
+          ]
+        }
+      ]);
+    }
   }, []);
 
   useEffect(() => {
@@ -87,54 +127,30 @@ const ChatWindow: React.FC = () => {
         { sender: 'bot', content: '*Visual Insights:*', type: 'text' },
         { 
           sender: 'bot', 
-          content: 'Expenses Over Time', 
+          content: 'Income vs Expenses Over Time', 
           type: 'chart',
           chartComponent: <ExpensesLineChart data={expensesData} />
         },
         { 
           sender: 'bot', 
-          content: 'Investment Distribution', 
+          content: 'Quarterly Investment Distribution', 
           type: 'chart',
           chartComponent: <InvestmentBarChart data={investmentData} />
         },
+        { 
+          sender: 'bot', 
+          content: 'Current Asset Allocation', 
+          type: 'chart',
+          chartComponent: <AssetAllocationPieChart data={assetAllocationData} />
+        },
       ];
       setMessageQueue(prev => [...prev, ...chartMessages]);
-    }else if (!userName) {
-      setUserName(input.toLowerCase());
-      const subsequentMessages: Message[] = [
-        {
-          sender: 'bot',
-          content: `Hi ${input}, I hope you are having a nice day!`,
-          type: 'text'
-        },
-        {
-          sender: 'bot',
-          content: "Let's get started by pulling in your financial data to customize your advice:\n- • AA Data\n- • Bank Transactions\n- • Pension Data/EPFO\n- • Investments/Cam",
-          type: 'text'
-        },
-        {
-          sender: 'bot',
-          content: 'Please confirm your consent to proceed:',
-          type: 'text',
-        },
-        {
-          sender: 'bot',
-          content: '',
-          type: 'button',
-          buttons: [
-            { label: 'I provide my consent', value: 'consent' },
-            { label: 'I do not provide my consent', value: 'no-consent' }
-          ]
-        }
-      ];
-      setMessageQueue(prev => [...prev, ...subsequentMessages]);
     } else if (sessionId) {
       try {
         const response = await chatApi({
-          customer_name: userName,
+          customer_name: userName!,
           session_id: sessionId,
           user_answer: input,
-          // is_user_consent: isConsentGiven || false,
         });
         setMessageQueue(prev => [...prev, { sender: 'bot', content: response.question, type: 'text' }]);
       } catch (error) {
@@ -145,29 +161,91 @@ const ChatWindow: React.FC = () => {
   };
 
   const handleButtonClick = async (value: string) => {
-    const isConsent = value === 'consent';
-    setIsConsentGiven(isConsent);
-    setDisplayedMessages(prev => [...prev, { sender: 'user', content: isConsent ? 'I provide my consent' : 'I do not provide my consent', type: 'text' }]);
-
-    if (isConsent) {
+    if (!isConsentGiven) {
+      const isConsent = value === 'consent';
+      setIsConsentGiven(isConsent);
+      setDisplayedMessages(prev => [...prev, { sender: 'user', content: isConsent ? 'I provide my consent' : 'I do not provide my consent', type: 'text' }]);
+    
+      if (isConsent) {
+        setMessageQueue(prev => [
+          ...prev,
+          { sender: 'bot', content: 'Thank you for providing consent!', type: 'text' },
+          {
+            sender: 'bot',
+            content: "Can you select your risk appetite for the investments you are planning to make:",
+            type: 'text'
+          },
+          {
+            sender: 'bot',
+            content: '',
+            type: 'button',
+            buttons: [
+              { label: 'Aggressive', value: 'Aggressive' },
+              { label: 'Moderately aggressive', value: 'Moderately aggressive' },
+              { label: 'Moderate', value: 'Moderate' },
+              { label: 'Conservative', value: 'Conservative' }
+            ]
+          }
+        ]);
+      } else {
+        setMessageQueue(prev => [...prev, { sender: 'bot', content: 'May I help you with anything else?', type: 'text' }]);
+      }
+    } else {
+      setRiskAppetite(value);
+      setDisplayedMessages(prev => [...prev, { sender: 'user', content: value, type: 'text' }]);
+      
       try {
+        setMessageQueue(prev => [
+          ...prev,
+          {
+            sender: 'bot',
+            content: "Let's get started by pulling in your financial data to customize your advice:\n- • AA Data\n- • Bank Transactions\n- • Pension Data/EPFO\n- • Investments/Cam",
+            type: 'text'
+          },
+        ]);
+    
         const response = await chatApi({
           customer_name: userName!,
-          user_answer: "Hello",
+          user_answer: `Hello ${value}`,
           is_user_consent: true,
         });
         setSessionId(response.session_id);
+    
+        // Show charts one after another
+        const charts = [
+          { content: 'Income vs Expenses Over Time', component: <ExpensesLineChart data={expensesData} /> },
+          { content: 'Quarterly Investment Distribution', component: <InvestmentBarChart data={investmentData} /> },
+          { content: 'Current Asset Allocation', component: <AssetAllocationPieChart data={assetAllocationData} /> },
+          { content: 'Group Distribution', component: <PieChartWithPaddingAngle data={pieChartWithPaddingAngleData} /> },
+          { content: 'Income, Expenses, and Savings Trends', component: <LineBarAreaComposedChart data={lineBarAreaComposedChartData} /> },
+        ];
+    
         setMessageQueue(prev => [
           ...prev,
-          { sender: 'bot', content: response.question, type: 'text' },
-          // { sender: 'bot', content: 'May I know the monetary goals you are trying to achieve?', type: 'text' },
+          { sender: 'bot', content: 'Now that I have your financial data, let me spin up my AI Magic Wand 🪄 and show you *Visual Insights* of your financial history: ', type: 'text' },
         ]);
+    
+        for (let i = 0; i < charts.length; i++) {
+          setTimeout(() => {
+            setMessageQueue(prev => [
+              ...prev,
+              { sender: 'bot', content: charts[i].content, type: 'chart', chartComponent: charts[i].component },
+            ]);
+          }, (i + 1) * 2000); // 2 seconds delay between each chart, starting after the initial message
+        }
+    
+        // Add the final text message after all charts
+        setTimeout(() => {
+          setMessageQueue(prev => [
+            ...prev,
+            { sender: 'bot', content: response.question, type: 'text' },
+          ]);
+        }, (charts.length + 1) * 2000);
+    
       } catch (error) {
         console.error('Error in consent API call:', error);
         setMessageQueue(prev => [...prev, { sender: 'bot', content: 'Sorry, there was an error processing your request.', type: 'text' }]);
       }
-    } else {
-      setMessageQueue(prev => [...prev, { sender: 'bot', content: 'May I help you with anything else?', type: 'text' }]);
     }
   };
 

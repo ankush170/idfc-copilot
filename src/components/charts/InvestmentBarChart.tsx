@@ -24,7 +24,7 @@ const InvestmentBarChart: React.FC<InvestmentBarChartProps> = ({ data }) => (
       <Bar dataKey="FD" stackId="a" fill="#8884d8" />
       <Bar dataKey="DirectEquity" stackId="a" fill="#82ca9d" />
       <Bar dataKey="MutualFunds" stackId="a" fill="#ffc658" />
-      <Bar dataKey="Insurance" stackId="a" fill="#ff8042" />
+      <Bar dataKey="Insurance" stackId="a" fill="#ff7300" />
     </BarChart>
   </ResponsiveContainer>
 );

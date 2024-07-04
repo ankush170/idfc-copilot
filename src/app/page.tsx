@@ -1,17 +1,35 @@
-// src/pages/index.tsx
+// app/page.tsx
 'use client';
 
-import ChatWindow from '../components/Chat/ChatWindow';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function Home() {
+export default function LoginPage() {
+  const [name, setName] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem('userName', name);
+    router.push('/chat');
+  };
+
   return (
-    <main className="relative flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
-      <img 
-        src="/idfc-logo.png" 
-        alt="IDFC Logo" 
-        className="absolute top-4 left-4 w-[10rem] h-auto z-20" 
-      />
-      <ChatWindow />
-    </main>
+    <div className="flex items-center justify-center min-h-screen bg-[color:var(--mobile-bg-color)]">
+      <form onSubmit={handleSubmit} className="p-8 bg-white rounded-lg shadow-md">
+        <h1 className="mb-4 text-2xl font-bold text-center">Welcome to IDFC GenAI Robo Advisor</h1>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          className="w-full p-2 mb-4 border rounded"
+          required
+        />
+        <button type="submit" className="w-full p-2 text-white bg-[#F1948A] rounded hover:bg-[#E74C3C]">
+          Start Chat
+        </button>
+      </form>
+    </div>
   );
 }

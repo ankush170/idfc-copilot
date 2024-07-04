@@ -1,4 +1,4 @@
-// src/components/Chat/UserInput.tsx
+// components/Chat/UserInput.tsx
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
