@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import Message from './Message';
 import UserInput from './UserInput';
 import { chatApi } from '../../utils/api';
-import ExpensesLineChart from '../Charts/ExpensesLineChart';
-import InvestmentBarChart from '../Charts/InvestmentBarChart';
-import AssetAllocationPieChart from '../Charts/AssetAllocationPieChart';
-import PieChartWithPaddingAngle from '../Charts/PieChartWithPaddingAngle';
-import LineBarAreaComposedChart from '../Charts/LineBarAreaComposedChart';
+import ExpensesLineChart from '../charts/ExpensesLineChart';
+import InvestmentBarChart from '../charts/InvestmentBarChart';
+import AssetAllocationPieChart from '../charts/AssetAllocationPieChart';
+import PieChartWithPaddingAngle from '../charts/PieChartWithPaddingAngle';
+import LineBarAreaComposedChart from '../charts/LineBarAreaComposedChart';
 
 interface Message {
   sender: 'user' | 'bot';

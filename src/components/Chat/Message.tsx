@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'; // Import remark-gfm for GitHub-flavored markdown
 import { useState, useEffect, useRef } from 'react';
 
 interface MessageProps {
@@ -82,9 +83,12 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
         );
       case 'text':
       default:
+        console.log("Displayed content: ", displayedContent)
         return (
           <div className="relative inline-block">
-            <ReactMarkdown>{displayedContent.replace(/\n/g, '  \n')}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {displayedContent.replace(/\n/g, '  \n')}
+            </ReactMarkdown>
             {isTyping && (
               <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
             )}
