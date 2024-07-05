@@ -1,5 +1,5 @@
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm'; 
+import remarkGfm from 'remark-gfm';
 import { useState, useEffect, useRef } from 'react';
 
 interface MessageProps {
@@ -20,6 +20,10 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
   const typingRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
+  const escapeBoldAsterisks = (text: string) => {
+    return text.replace(/\*\*(.*?)\*\*/g, '\\*\\*$1\\*\\*');
+  };
+
   useEffect(() => {
     if (!isUser && message.type === 'text') {
       let index = 0;
@@ -28,7 +32,8 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
 
       const typeNextChar = () => {
         if (index < message.content.length) {
-          setDisplayedContent(message.content.slice(0, index + 1));
+          const newContent = escapeBoldAsterisks(message.content.slice(0, index + 1));
+          setDisplayedContent(newContent);
           index++;
           typingRef.current = setTimeout(typeNextChar, 35);
         } else {
@@ -81,20 +86,25 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
             </div>
           </div>
         );
-        case 'text':
-          default:
-            return (
-              <div className="relative inline-block">
-                <ReactMarkdown
-                  children={displayedContent}
-                  remarkPlugins={[remarkGfm]}
-                />
-                {isTyping && (
-                  <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
-                )}
-              </div>
-            );
-        }
+      case 'text':
+        default:
+          return (
+            <div className="relative inline-block">
+              <ReactMarkdown
+                children={displayedContent}
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+                  strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
+                  em: ({ node, ...props }) => <em className="italic" {...props} />,
+                }}
+              />
+              {isTyping && (
+                <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
+              )}
+            </div>
+          );
+    }
   };
 
   return (

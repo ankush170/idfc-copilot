@@ -46,7 +46,11 @@ main {
 }
 
 .bot-message {
-  @apply bg-transparent border-none text-left;
+  @apply bg-transparent border-none text-left whitespace-pre-wrap;
+}
+
+.bot-message strong {
+  font-weight: bold;
 }
 
 .user-input {
