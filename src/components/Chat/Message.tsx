@@ -1,12 +1,12 @@
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { useState, useEffect, useRef } from "react";
 
 interface MessageProps {
   message: {
-    sender: 'user' | 'bot';
+    sender: "user" | "bot";
     content: string;
-    type?: 'text' | 'button' | 'chart';
+    type?: "text" | "button" | "chart";
     buttons?: { label: string; value: string }[];
     chartComponent?: React.ReactNode;
   };
@@ -14,25 +14,27 @@ interface MessageProps {
 }
 
 const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
-  const isUser = message.sender === 'user';
-  const [displayedContent, setDisplayedContent] = useState('');
+  const isUser = message.sender === "user";
+  const [displayedContent, setDisplayedContent] = useState("");
   const [isTyping, setIsTyping] = useState(!isUser);
   const typingRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   const escapeBoldAsterisks = (text: string) => {
-    return text.replace(/\*\*(.*?)\*\*/g, '\\*\\*$1\\*\\*');
+    return text.replace(/\*\*(.*?)\*\*/g, "\\*\\*$1\\*\\*");
   };
 
   useEffect(() => {
-    if (!isUser && message.type === 'text') {
+    if (!isUser && message.type === "text") {
       let index = 0;
       setIsTyping(true);
-      setDisplayedContent('');
+      setDisplayedContent("");
 
       const typeNextChar = () => {
         if (index < message.content.length) {
-          const newContent = escapeBoldAsterisks(message.content.slice(0, index + 1));
+          const newContent = escapeBoldAsterisks(
+            message.content.slice(0, index + 1)
+          );
           setDisplayedContent(newContent);
           index++;
           typingRef.current = setTimeout(typeNextChar, 35);
@@ -44,7 +46,6 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
       typeNextChar();
 
       return () => {
-
         if (typingRef.current) clearTimeout(typingRef.current);
       };
     } else {
@@ -58,10 +59,9 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
     onButtonClick?.(value);
   };
 
-  
   const renderContent = () => {
     switch (message.type) {
-      case 'button':
+      case "button":
         return (
           <div className="flex flex-col space-y-2">
             {message.buttons?.map((button, index) => (
@@ -79,39 +79,45 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
             ))}
           </div>
         );
-      case 'chart':
+      case "chart":
         return (
           <div className="w-full my-4 overflow-x-auto">
             <div className="text-sm font-bold mb-2">{message.content}</div>
-            <div className="min-w-[600px]">
-              {message.chartComponent}
-            </div>
+            <div className="min-w-[600px]">{message.chartComponent}</div>
           </div>
         );
-      case 'text':
-        default:
-          return (
-            <div className="relative inline-block">
-              <ReactMarkdown
-                children={displayedContent}
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  p: ({ node, ...props }) => <p className="mb-2" {...props} />,
-                  strong: ({ node, ...props }) => <strong className="font-bold" {...props} />,
-                  em: ({ node, ...props }) => <em className="italic" {...props} />,
-                }}
-              />
-              {isTyping && (
-                <span className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute" style={{ bottom: '0.4rem', right: '-0.6em' }}></span>
-              )}
-            </div>
-          );
+      case "text":
+      default:
+        return (
+          <div className="relative inline-block">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                p: ({ node, ...props }) => <p className="mb-2" {...props} />,
+                strong: ({ node, ...props }) => (
+                  <strong className="font-bold" {...props} />
+                ),
+                em: ({ node, ...props }) => (
+                  <em className="italic" {...props} />
+                ),
+              }}
+            >
+              {displayedContent}
+            </ReactMarkdown>
+            {isTyping && (
+              <span
+                className="inline-block w-1 h-4 ml-1 bg-black animate-blink absolute"
+                style={{ bottom: "0.4rem", right: "-0.6em" }}
+              ></span>
+            )}
+          </div>
+        );
     }
   };
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-2`}>
-      <div className={`message ${isUser ? 'user-message' : 'bot-message'}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-2`}>
+      <div className={`message ${isUser ? "user-message" : "bot-message"}`}>
         {renderContent()}
       </div>
     </div>
