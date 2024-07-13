@@ -18,7 +18,7 @@ export default function ChatPage() {
   return (
     <main className="relative flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
       <img 
-        src="/logo_without_bg.svg" 
+        src="/onfilogo.svg" 
         alt="OnFinance Logo" 
         className="absolute top-4 left-1 w-[10rem] h-20 z-20" 
       />

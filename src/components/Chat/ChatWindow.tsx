@@ -78,7 +78,7 @@ const ChatWindow: React.FC = () => {
     if (storedName) {
       setUserName(storedName);
       setMessageQueue([
-        { sender: 'bot', content: `Welcome to OnFinance AI, ${storedName}. I hope you are having a great day!`, type: 'text' },
+        { sender: 'bot', content: `Welcome to OnFinance AI Robo Advisor, ${storedName}. I hope you are having a great day!`, type: 'text' },
         { sender: 'bot', content: 'Please confirm your consent to access your financial data in order to proceed:', type: 'text' },
         {
           sender: 'bot',
