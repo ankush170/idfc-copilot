@@ -44,6 +44,7 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
       typeNextChar();
 
       return () => {
+
         if (typingRef.current) clearTimeout(typingRef.current);
       };
     } else {
@@ -57,6 +58,7 @@ const Message: React.FC<MessageProps> = ({ message, onButtonClick }) => {
     onButtonClick?.(value);
   };
 
+  
   const renderContent = () => {
     switch (message.type) {
       case 'button':

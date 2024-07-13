@@ -18,9 +18,9 @@ export default function ChatPage() {
   return (
     <main className="relative flex justify-center items-center h-screen bg-[color:var(--mobile-bg-color)]">
       <img 
-        src="/idfc-logo.png" 
-        alt="IDFC Logo" 
-        className="absolute top-4 left-4 w-[10rem] h-auto z-20" 
+        src="/logo_without_bg.svg" 
+        alt="OnFinance Logo" 
+        className="absolute top-4 left-1 w-[10rem] h-20 z-20" 
       />
       <ChatWindow />
     </main>

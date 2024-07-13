@@ -26,7 +26,7 @@ export default function LoginPage() {
           className="w-full p-2 mb-4 border rounded"
           required
         />
-        <button type="submit" className="w-full p-2 text-white bg-[#F1948A] rounded hover:bg-[#E74C3C]">
+        <button type="submit" className="w-full p-2 text-white bg-[#58D68D] rounded hover:bg-[#27AE60]">
           Start Chat
         </button>
       </form>

@@ -12,16 +12,17 @@
 
 :root {
   --font-oracle: 'Marcellus', sans-serif;
-  --mobile-bg-color: #FADBD8;
+  --mobile-bg-color: #D5F5E3;
   --text-color: #4A4A4A;
   --bot-bg-color: #FAF3EA;
   --user-bg-color: #E5DCC5;
-  --maroon-color: #C70039;
+  --maroon-color: #58D68D;
 }
 
 html {
   scroll-behavior: smooth;
 }
+
 
 body {
   @apply bg-[color:var(--mobile-bg-color)] text-[color:var(--text-color)] font-sans text-xl font-bold;
@@ -42,7 +43,7 @@ main {
 }
 
 .user-message {
-  @apply bg-[#F1948A] p-2 rounded-[0.5rem] text-white justify-end;
+  @apply bg-[#2ECC71] p-2 rounded-[0.5rem] text-white justify-end;
 }
 
 .bot-message {

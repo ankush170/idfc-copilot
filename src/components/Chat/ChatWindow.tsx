@@ -78,7 +78,7 @@ const ChatWindow: React.FC = () => {
     if (storedName) {
       setUserName(storedName);
       setMessageQueue([
-        { sender: 'bot', content: `Welcome to IDFC GenAI Robo Advisor, ${storedName}. I hope you are having a great day!`, type: 'text' },
+        { sender: 'bot', content: `Welcome to OnFinance AI, ${storedName}. I hope you are having a great day!`, type: 'text' },
         { sender: 'bot', content: 'Please confirm your consent to access your financial data in order to proceed:', type: 'text' },
         {
           sender: 'bot',
@@ -251,7 +251,7 @@ const ChatWindow: React.FC = () => {
 
   return (
     <div className="chat-window relative h-screen flex flex-col">
-      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#FADBD8] to-transparent pointer-events-none z-10" />
+      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-[#D5F5E3] to-transparent pointer-events-none z-10" />
       <div 
         className="flex-grow overflow-y-auto scrollbar-hide p-4 pt-16"
         ref={chatWindowRef}
